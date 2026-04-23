@@ -212,16 +212,32 @@ def build_ui(state, h_zone, c_zone):
             conn.row_factory = sqlite3.Row
             res = conn.execute("SELECT titre, resume_fr, resume_en, numero FROM annexes WHERE numero = ?", (state.annexe_selectionnee,)).fetchone()
             conn.close()
+            
             if res:
                 resume = res['resume_fr'] if state.lang == 'FR' else res['resume_en']
-                ui.label(res['titre']).classes('text-xl font-black text-blue-900 mb-4 px-2')
-                with ui.card().classes('w-full p-6 bg-white border-t-4 border-blue-900 shadow-md rounded-2xl'):
-                    ui.markdown(resume if resume else "Résumé à venir...")
-                pdf_url = f"/static/Annexe_{res['numero']}.pdf"
-                with ui.card().classes('w-full bg-red-50 p-4 border border-red-100 rounded-2xl mt-6 items-center'):
-                    ui.label(txt['official_pdf']).classes('text-red-900 font-bold mb-2')
-                    ui.button(icon='download', on_click=lambda: ui.download(pdf_url)).props('round flat color=red-900')
-            ui.button(txt['back'], on_click=lambda: set_step('LISTE_ANNEXES')).props('flat').classes('w-full mt-4')
+                
+                # On utilise la nouvelle structure "annexe-container"
+                with ui.column().classes('annexe-container'):
+                    
+                    # 1. Titre et Numéro (Bien séparés)
+                    with ui.element('div').classes('annexe-title-section'):
+                        ui.label(f"ANNEXE N°{res['numero']}").classes('text-blue-600 font-bold uppercase text-xs tracking-widest')
+                        ui.label(res['titre']).classes('text-2xl font-black text-slate-800 leading-tight')
+
+                    # 2. Le Résumé (Dans sa propre carte propre)
+                    with ui.element('div').classes('annexe-card-info'):
+                        ui.markdown(resume if resume else "Résumé à venir...").classes('text-slate-700 leading-relaxed')
+
+                    # 3. Zone Téléchargement (Espacée)
+                    with ui.card().classes('w-full bg-red-50 p-4 border border-red-100 rounded-2xl items-center mt-4'):
+                        ui.label(txt['official_pdf']).classes('text-red-900 font-bold mb-2')
+                        pdf_url = f"/static/Annexe_{res['numero']}.pdf"
+                        ui.button("TÉLÉCHARGER LE PDF", icon='download', on_click=lambda: ui.download(pdf_url)) \
+                            .props('elevated color=red-800').classes('rounded-full')
+
+                    # 4. Bouton Retour
+                    ui.button(txt['back'], on_click=lambda: set_step('LISTE_ANNEXES')) \
+                        .props('flat icon=arrow_back').classes('w-full text-slate-400 mt-4')
 
 @ui.page('/')
 def main_page():

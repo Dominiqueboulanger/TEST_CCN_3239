@@ -112,30 +112,27 @@ def build_ui(state, h_zone, c_zone):
                         is_special = m.get('is_direct', False)
                         border_color = 'border-[#10b981]' if is_special else 'border-slate-200'
                         
-                        # 2. GESTION DU CLIC : On sépare bien les deux cas
                         if is_special:
-                            # Ouvre simplement le dialogue déjà créé
                             on_click_action = direct_dialog.open
                         else:
-                            # Capture correctement les valeurs de m et l pour la boucle
                             on_click_action = lambda m=m, l=label_affiche: set_step(2, {'colonne_metier': m['c'], 'label_metier': l})
 
-                        with ui.card().classes(f'w-full bg-white cursor-pointer p-4 transition-all border-2 {border_color}') \
-                            .on('click', on_click_action):
+                        # 1. On crée une div relative qui contiendra la carte ET le bouton invisible
+                        with ui.element('div').classes('relative w-full'):
                             
-                            with ui.column().classes('items-center justify-center w-full gap-2'):
-                                if not is_special:
-                                    # Icônes standards
-                                    ui.html(f'<i class="fa-solid {m["icon"]} text-2xl text-black"></i>')
-                                    ui.label(label_affiche).classes('text-[14px] font-bold text-center text-slate-800 uppercase leading-tight')
-                                else:
-                                    # Bouton Vert "1 CLIC" (On simplifie le HTML pour le mobile)
-                                    ui.html(f'<i class="fa-solid {m["icon"]} text-2xl text-[#10b981] mb-1"></i>')
-                                    ui.label("ARTICLE CCN 3239 EN 1 CLIC").classes('text-[12px] font-black text-center text-slate-800 leading-tight')
+                            # 2. La carte visuelle (on enlève le .on('click') d'ici)
+                            with ui.card().classes(f'w-full bg-white p-4 border-2 {border_color} shadow-sm'):
+                                with ui.column().classes('items-center justify-center w-full gap-1'):
+                                    if not is_special:
+                                        ui.html(f'<i class="fa-solid {m["icon"]} text-black"></i>')
+                                        ui.label(label_affiche).classes('font-bold text-center text-slate-800 uppercase leading-tight')
+                                    else:
+                                        ui.html(f'<i class="fa-solid {m["icon"]} text-[#10b981]"></i>')
+                                        ui.label("ARTICLE CCN\n3239\nEN 1 CLIC").classes('special-label text-center text-slate-800 leading-tight').style('white-space: pre-line;')
 
-                ui.separator().classes('my-4 w-11/12')
-                ui.button(txt['annexes_btn'], on_click=lambda: set_step('LISTE_ANNEXES')) \
-                    .classes('w-full py-4 bg-slate-800 text-white rounded-2xl font-bold animate-entrance shadow-lg')
+                            # 3. LE BOUTON INVISIBLE (L'astuce pour le tactile)
+                            # Il couvre toute la zone et capte le clic sans faille
+                            ui.button(on_click=on_click_action).classes('absolute inset-0 w-full h-full opacity-0 z-10')
         # --- ÉTAPE 2 : GESTION / FIN ---
         elif state.step == 2:
             ui.label(txt['step2_title']).classes('text-lg font-bold text-slate-700 w-full mb-2 px-2')

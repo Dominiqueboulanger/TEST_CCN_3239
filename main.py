@@ -84,9 +84,9 @@ def build_ui(state, h_zone, c_zone):
                 ui.button('🇬🇧', on_click=lambda: (setattr(state, 'lang', 'EN'), build_ui.refresh())).props('flat').classes('text-xl p-0')
 
     with c_zone:
+        
         # --- ÉTAPE 1 : ACCUEIL ---
         if state.step == 1:
-            # 1. ON PRÉPARE LE DIALOGUE UNE SEULE FOIS (pour éviter le crash JS sur mobile)
             with ui.dialog() as direct_dialog, ui.card().classes('items-center'):
                 ui.label(txt['search_label']).classes('font-bold')
                 i_direct = ui.input(placeholder="Ex: 139").classes('w-full')
@@ -115,25 +115,30 @@ def build_ui(state, h_zone, c_zone):
                         if is_special:
                             on_click_action = direct_dialog.open
                         else:
-                            on_click_action = lambda m=m, l=label_affiche: set_step(2, {'colonne_metier': m['c'], 'label_metier': l})
+                            # Utilisation d'une fonction nommée pour éviter les problèmes de capture de variable
+                            def create_click(m_code=m['c'], m_label=label_affiche):
+                                return lambda: set_step(2, {'colonne_metier': m_code, 'label_metier': m_label})
+                            on_click_action = create_click()
 
-                        # 1. On crée une div relative qui contiendra la carte ET le bouton invisible
-                        with ui.element('div').classes('relative w-full'):
-                            
-                            # 2. La carte visuelle (on enlève le .on('click') d'ici)
-                            with ui.card().classes(f'w-full bg-white p-4 border-2 {border_color} shadow-sm'):
-                                with ui.column().classes('items-center justify-center w-full gap-1'):
-                                    if not is_special:
-                                        ui.html(f'<i class="fa-solid {m["icon"]} text-black"></i>')
-                                        ui.label(label_affiche).classes('font-bold text-center text-slate-800 uppercase leading-tight')
-                                    else:
-                                        ui.html(f'<i class="fa-solid {m["icon"]} text-[#10b981]"></i>')
-                                        ui.label("ARTICLE CCN\n3239\nEN 1 CLIC").classes('special-label text-center text-slate-800 leading-tight').style('white-space: pre-line;')
-
-                            # 3. LE BOUTON INVISIBLE (L'astuce pour le tactile)
-                            # Il couvre toute la zone et capte le clic sans faille
-                            ui.button(on_click=on_click_action).classes('absolute inset-0 w-full h-full opacity-0 z-10')
-        # --- ÉTAPE 2 : GESTION / FIN ---
+                        # LA CARTE : On ajoute 'native' et on gère le clic proprement
+                        card = ui.card().classes(f'w-full bg-white p-4 border-2 {border_color} shadow-sm cursor-pointer active:opacity-50')
+                        card.on('click', on_click_action) # Événement standard
+                        
+                        with card:
+                            # pointer-events-none est INDISPENSABLE ici pour que le clic touche la carte
+                            with ui.column().classes('items-center justify-center w-full gap-1 pointer-events-none'):
+                                if not is_special:
+                                    ui.html(f'<i class="fa-solid {m["icon"]} text-black"></i>')
+                                    ui.label(label_affiche).classes('font-bold text-center text-slate-800 uppercase leading-tight')
+                                else:
+                                    ui.html(f'<i class="fa-solid {m["icon"]} text-[#10b981]"></i>')
+                                    ui.label("ARTICLE CCN\n3239\nEN 1 CLIC").classes('special-label text-center text-slate-800 leading-tight').style('white-space: pre-line;')
+                
+                # Ajout du bouton ANNEXES qui avait disparu ou s'était décalé
+                ui.separator().classes('my-2 w-11/12')
+                ui.button(txt['annexes_btn'], on_click=lambda: set_step('LISTE_ANNEXES')) \
+                    .classes('w-full py-4 animate-entrance shadow-lg text-sm rounded-2xl') 
+    # --- ÉTAPE 2 : GESTION / FIN ---
         elif state.step == 2:
             ui.label(txt['step2_title']).classes('text-lg font-bold text-slate-700 w-full mb-2 px-2')
             f = f"WHERE {col_filtre} IS NOT NULL AND {col_filtre} != ''"

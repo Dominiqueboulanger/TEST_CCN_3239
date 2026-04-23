@@ -41,9 +41,9 @@ STYLE_CSS = '''
     }
 
     .q-card {
-        border-radius: 20px !important;
-        border: 2px solid #e2e8f0 !important;
+        border: 2px solid #e2e8f0; /* Supprimez le !important ici */
         cursor: pointer !important;
+        border-radius: 20px !important;
     }
 
     /* --- FIX DU HEADER (Verrouillage 1 ligne) --- */

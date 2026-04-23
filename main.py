@@ -86,7 +86,7 @@ def build_ui(state, h_zone, c_zone):
     with c_zone:
         # --- ÉTAPE 1 : ACCUEIL ---
         if state.step == 1:
-            with ui.column().classes('w-full items-center zoom-page'):
+            with ui.column().classes('w-full items-center'):
                 METIERS_DATA = [
                     {"c": "art_am", "fr": "Assistant Maternel", "en": "Childminder", "icon": "fa-baby-carriage"},
                     {"c": "art_ef", "fr": "Assistant Parental", "en": "Nanny", "icon": "fa-baby"},

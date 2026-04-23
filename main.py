@@ -221,13 +221,14 @@ def build_ui(state, h_zone, c_zone):
 @ui.page('/')
 def main_page():
     # Ajout de min-h-screen pour forcer la hauteur sur mobile
-    with ui.column().classes('w-full items-center min-h-screen p-2'): 
+    with ui.column().classes('w-full items-center min-h-screen p-2'):
+        ui.label("TEST DE RENDU - SI JE M'AFFICHE, LE SERVEUR FONCTIONNE") # <--- AJOUTEZ CECI
         # ... reste de votre code
         # Injection Head (CSS et Meta)
         ui.add_head_html(f'''
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-        <style>{css.STYLE_CSS}</style>
+        # <style>{css.STYLE_CSS}</style>
         ''')
     
     # Création d'un état unique pour CETTE session

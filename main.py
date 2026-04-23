@@ -239,7 +239,7 @@ def main_page():
     
     # Lancement de l'interface
     build_ui(user_state, h_zone, c_zone)
-
+ui.label("Serveur opérationnel - Test de rendu").classes('text-red-500 text-4xl')
 # --- LANCEMENT SERVEUR ---
 # Modification recommandée
 ui.run(

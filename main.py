@@ -242,4 +242,12 @@ def main_page():
 
 # --- LANCEMENT SERVEUR ---
 # Modification recommandée
-ui.run(title="Guide CCN", host='0.0.0.0', port=int(os.environ.get("PORT", 9000)), reload=False)
+ui.run(
+    title="Guide CCN", 
+    host='0.0.0.0', 
+    port=int(os.environ.get("PORT", 9000)), 
+    reload=False,
+    # Ces deux paramètres aident à stabiliser la connexion derrière un proxy
+    uvicorn_logging_level='info',
+    show=False 
+)

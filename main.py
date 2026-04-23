@@ -220,6 +220,9 @@ def build_ui(state, h_zone, c_zone):
 # --- POINT D'ENTRÉE DE L'APPLICATION ---
 @ui.page('/')
 def main_page():
+    # Ajout de min-h-screen pour forcer la hauteur sur mobile
+    with ui.column().classes('w-full items-center min-h-screen p-2'): 
+        # ... reste de votre code
     # Injection Head (CSS et Meta)
     ui.add_head_html(f'''
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">

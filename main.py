@@ -96,6 +96,7 @@ def build_ui(state, h_zone, c_zone):
                     ui.button(txt['search_btn'], on_click=lambda: set_step('DIRECT', {'art_cible': s_input.value})).props('flat').classes('font-bold')
 
         # --- ÉTAPE 1 : ACCUEIL ---
+       # --- ÉTAPE 1 : ACCUEIL ---
         if state.step == 1:
             with ui.column().classes('w-full items-center zoom-page'):
                 METIERS_DATA = [
@@ -103,17 +104,25 @@ def build_ui(state, h_zone, c_zone):
                     {"c": "art_ef", "fr": "Assistant Parental", "en": "Nanny", "icon": "fa-baby"},
                     {"c": "art_ef", "fr": "Employé Familial", "en": "Family Employee", "icon": "fa-house-user"},
                     {"c": "art_ef", "fr": "Assistant de Vie", "en": "Life Assistant", "icon": "fa-wheelchair"},
-                    {"c": "art_sc", "fr": "Autres métiers CESU", "en": "Other jobs (CESU)", "icon": "fa-briefcase"}
+                    {"c": "art_sc", "fr": "Autres métiers CESU", "en": "Other jobs (CESU)", "icon": "fa-briefcase"},
+                    {"c": "DIRECT", "fr": "Accès direct", "en": "Direct Access", "icon": "fa-book-open", "is_direct": True}
                 ]
+                
                 ui.label(txt['step1_title']).classes('text-xl font-bold text-slate-800 w-full mb-2 px-2')
+                
                 with ui.element('div').classes('grid-container w-full'):
                     for m in METIERS_DATA:
                         label_affiche = m['fr'] if state.lang == 'FR' else m['en']
-                        with ui.card().classes('w-full bg-white cursor-pointer p-4 transition-all') \
-                            .on('click', lambda m=m, l=label_affiche: set_step(2, {'colonne_metier': m['c'], 'label_metier': l})):
+                        border_color = 'border-blue-500' if m.get('is_direct') else 'border-slate-200'
+                        
+                        with ui.card().classes(f'w-full bg-white cursor-pointer p-4 transition-all border-2 {border_color}') \
+                            .on('click', lambda m=m, l=label_affiche: 
+                                set_step('DIRECT', {'art_cible': ''}) if m.get('is_direct') else set_step(2, {'colonne_metier': m['c'], 'label_metier': l})):
+                            
                             with ui.column().classes('items-center justify-center w-full gap-2'):
-                                ui.html(f'<i class="fa-solid {m["icon"]} text-3xl text-black"></i>')
-                                ui.label(label_affiche).classes('text-[11px] font-bold text-center text-slate-800 uppercase leading-tight')
+                                ui.html(f'<i class="fa-solid {m["icon"]} text-2xl text-black"></i>')
+                                ui.label(label_affiche).classes('text-[10px] font-bold text-center text-slate-800 uppercase leading-tight')
+                                
                 ui.separator().classes('my-4 w-11/12')
                 ui.button(txt['annexes_btn'], on_click=lambda: set_step('LISTE_ANNEXES')) \
                     .classes('w-full py-4 bg-slate-800 text-white rounded-2xl font-bold animate-entrance shadow-lg')

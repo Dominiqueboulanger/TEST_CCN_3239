@@ -90,7 +90,7 @@ def build_ui(state, h_zone, c_zone):
                     .props('flat icon=home size=sm').classes('text-blue-500 font-bold p-0')
 
       
-       # --- ÉTAPE 1 : ACCUEIL ---
+       # # --- ÉTAPE 1 : ACCUEIL ---
         if state.step == 1:
             with ui.column().classes('w-full items-center zoom-page'):
                 METIERS_DATA = [
@@ -107,7 +107,8 @@ def build_ui(state, h_zone, c_zone):
                 with ui.element('div').classes('grid-container w-full'):
                     for m in METIERS_DATA:
                         label_affiche = m['fr'] if state.lang == 'FR' else m['en']
-                        border_color = 'border-blue-500' if m.get('is_direct') else 'border-slate-200'
+                        # Si c'est l'accès direct, bordure verte, sinon bordure grise
+                        border_color = 'border-[#10b981]' if m.get('is_direct') else 'border-slate-200'
                         
                         with ui.card().classes(f'w-full bg-white cursor-pointer p-4 transition-all border-2 {border_color}') \
                             .on('click', lambda m=m, l=label_affiche: 

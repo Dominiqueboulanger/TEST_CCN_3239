@@ -89,13 +89,7 @@ def build_ui(state, h_zone, c_zone):
                 ui.button(txt['home'], on_click=lambda: (state.__init__(), build_ui.refresh())) \
                     .props('flat icon=home size=sm').classes('text-blue-500 font-bold p-0')
 
-        if state.step not in ['DIRECT', 6, 'LISTE_ANNEXES', 'VOIR_ANNEXE']:
-            with ui.expansion(txt['search_label']).classes('w-full border-2 rounded-2xl mb-2 bg-white'):
-                with ui.row().classes('w-full items-center p-3'):
-                    s_input = ui.input(placeholder="Ex: 139").classes('flex-grow')
-                    ui.button(txt['search_btn'], on_click=lambda: set_step('DIRECT', {'art_cible': s_input.value})).props('flat').classes('font-bold')
-
-        # --- ÉTAPE 1 : ACCUEIL ---
+      
        # --- ÉTAPE 1 : ACCUEIL ---
         if state.step == 1:
             with ui.column().classes('w-full items-center zoom-page'):

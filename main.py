@@ -116,10 +116,18 @@ def build_ui(state, h_zone, c_zone):
 
                         with ui.card().classes(f'w-full bg-white cursor-pointer p-4 transition-all border-2 {border_color}').on('click', handle_click):
                             with ui.column().classes('items-center justify-center w-full gap-2'):
+                                # 1. Gestion de l'icône
                                 if not m.get('is_direct'):
                                     ui.html(f'<i class="fa-solid {m["icon"]} text-2xl text-black"></i>')
-                                ui.label(label_affiche).classes('text-[14px] font-bold text-center text-slate-800 uppercase leading-tight')
                                 
+                                # 2. Gestion du texte (c'est ici que ça change)
+                                if m.get('is_direct'):
+                                    # Pour le bouton vert : on force le saut de ligne
+                                    ui.html('<div style="text-align: center; font-weight: bold; line-height: 1.2; text-transform: uppercase;">'
+                                            'ARTICLE<br>CCN 3239<br>EN 1 CLIC</div>').classes('text-[14px] text-slate-800')
+                                else:
+                                    # Pour les autres : affichage standard
+                                    ui.label(label_affiche).classes('text-[14px] font-bold text-center text-slate-800 uppercase leading-tight')    
                 ui.separator().classes('my-4 w-11/12')
                 ui.button(txt['annexes_btn'], on_click=lambda: set_step('LISTE_ANNEXES')) \
                     .classes('w-full py-4 bg-slate-800 text-white rounded-2xl font-bold animate-entrance shadow-lg')

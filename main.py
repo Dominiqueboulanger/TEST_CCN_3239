@@ -219,26 +219,20 @@ def build_ui(state, h_zone, c_zone):
 
 @ui.page('/')
 def main_page():
-    # 1. Injection Head (CSS désactivé pour le test)
-    ui.add_head_html(f'''
-        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-    ''')
+    # 1. Injection du CSS depuis le fichier css.py
+    # C'est cette ligne qui lie le design (css.py) à la structure (main.py)
+    ui.add_head_html(f'<style>{css.STYLE_CSS}</style>')
 
-    # 2. TOUT EST DANS CE BLOC (c'est la règle d'or)
-    with ui.column().classes('w-full items-center min-h-screen p-2'):
-        ui.label("TEST DE RENDU : SI JE M'AFFICHE, LE SERVEUR FONCTIONNE").classes('text-red-500 text-4xl')
+    # 2. Structure principale
+    with ui.column().classes('w-full items-center min-h-screen'):
         
-        # État et zones
-        user_state = AppState()
-        h_zone = ui.column().classes('w-full sticky-header bg-red-500 h-20')
-        c_zone = ui.column().classes('w-full max-w-md mx-auto p-4 gap-2 items-center bg-blue-200 min-h-screen')
+        # h_zone utilise la classe 'sticky-header' définie dans css.py
+        h_zone = ui.column().classes('sticky-header') 
+        c_zone = ui.column().classes('w-full max-w-md mx-auto p-4 gap-2 items-center')
         
-        ui.label("Serveur opérationnel - Test de rendu").classes('text-red-500 text-4xl')
-        
-        # Interface
+        # Lancement de l'interface
         build_ui(user_state, h_zone, c_zone)
-
+        
 # --- LANCEMENT SERVEUR ---
 # Modification recommandée
 ui.run(

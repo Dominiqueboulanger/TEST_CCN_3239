@@ -4,7 +4,7 @@ import css
 import os
 import sqlite3
 
-# --- CONFIGURATION FICHIERS STATIQUES ---
+ # --- CONFIGURATION FICHIERS STATIQUES ---
 app.add_static_files('/static', 'static')
 
 # --- CLASSE D'ÉTAT (UNE PAR UTILISATEUR) ---

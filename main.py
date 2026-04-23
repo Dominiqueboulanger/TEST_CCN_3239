@@ -110,10 +110,15 @@ def build_ui(state, h_zone, c_zone):
                         # Si c'est l'accès direct, bordure verte, sinon bordure grise
                         border_color = 'border-[#10b981]' if m.get('is_direct') else 'border-slate-200'
                         
-                        with ui.card().classes(f'w-full bg-white cursor-pointer p-4 transition-all border-2 {border_color}') \
-                            .on('click', lambda m=m, l=label_affiche: 
-                                set_step('DIRECT', {'art_cible': ''}) if m.get('is_direct') else set_step(2, {'colonne_metier': m['c'], 'label_metier': l})):
-                            
+                        def handle_click(m=m, l=label_affiche):
+                            if m.get('is_direct'):
+                                # Ici on demande le numéro (ou on peut rediriger vers une page de recherche)
+                                ui.dialog().create_from_input('Entrez le numéro d\'article', 
+                                    lambda val: set_step('DIRECT', {'art_cible': val}))
+                            else:
+                                set_step(2, {'colonne_metier': m['c'], 'label_metier': l})
+
+                        with ui.card().classes(f'w-full bg-white cursor-pointer p-4 transition-all border-2 {border_color}').on('click', handle_click):
                             with ui.column().classes('items-center justify-center w-full gap-2'):
                                 ui.html(f'<i class="fa-solid {m["icon"]} text-2xl text-black"></i>')
                                 ui.label(label_affiche).classes('text-[10px] font-bold text-center text-slate-800 uppercase leading-tight')

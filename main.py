@@ -225,7 +225,7 @@ def main_page():
 
     # 2. Structure principale
     with ui.column().classes('w-full items-center min-h-screen'):
-        
+        user_state = AppState()
         # h_zone utilise la classe 'sticky-header' définie dans css.py
         h_zone = ui.column().classes('sticky-header') 
         c_zone = ui.column().classes('w-full max-w-md mx-auto p-4 gap-2 items-center')

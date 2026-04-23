@@ -217,30 +217,28 @@ def build_ui(state, h_zone, c_zone):
                     ui.button(icon='download', on_click=lambda: ui.download(pdf_url)).props('round flat color=red-900')
             ui.button(txt['back'], on_click=lambda: set_step('LISTE_ANNEXES')).props('flat').classes('w-full mt-4')
 
-# --- POINT D'ENTRÉE DE L'APPLICATION ---
 @ui.page('/')
 def main_page():
-    # Ajout de min-h-screen pour forcer la hauteur sur mobile
-    with ui.column().classes('w-full items-center min-h-screen p-2'):
-        ui.label("TEST DE RENDU - SI JE M'AFFICHE, LE SERVEUR FONCTIONNE") # <--- AJOUTEZ CECI
-        # ... reste de votre code
-        # Injection Head (CSS et Meta)
-        ui.add_head_html(f'''
+    # 1. Injection Head (CSS désactivé pour le test)
+    ui.add_head_html(f'''
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-        # <style>{css.STYLE_CSS}</style>
-        ''')
-    
-    # Création d'un état unique pour CETTE session
-    user_state = AppState()
-    
-    # Création des zones UI uniques pour CETTE session
-    h_zone = ui.column().classes('w-full sticky-header')
-    c_zone = ui.column().classes('w-full max-w-md mx-auto p-4 gap-2 items-center')
-    
-    # Lancement de l'interface
-    build_ui(user_state, h_zone, c_zone)
-ui.label("Serveur opérationnel - Test de rendu").classes('text-red-500 text-4xl')
+    ''')
+
+    # 2. TOUT EST DANS CE BLOC (c'est la règle d'or)
+    with ui.column().classes('w-full items-center min-h-screen p-2'):
+        ui.label("TEST DE RENDU : SI JE M'AFFICHE, LE SERVEUR FONCTIONNE").classes('text-red-500 text-4xl')
+        
+        # État et zones
+        user_state = AppState()
+        h_zone = ui.column().classes('w-full sticky-header bg-red-500 h-20')
+        c_zone = ui.column().classes('w-full max-w-md mx-auto p-4 gap-2 items-center bg-blue-200 min-h-screen')
+        
+        ui.label("Serveur opérationnel - Test de rendu").classes('text-red-500 text-4xl')
+        
+        # Interface
+        build_ui(user_state, h_zone, c_zone)
+
 # --- LANCEMENT SERVEUR ---
 # Modification recommandée
 ui.run(

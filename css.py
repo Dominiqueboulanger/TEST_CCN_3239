@@ -31,20 +31,23 @@ STYLE_CSS = '''
         color: white !important;
     }
 
-    /* --- GRILLE ET CARTES --- */
-    .grid-container {
-        display: grid;
-        grid-template-columns: repeat(3, 1fr);
-        gap: 12px;
-        width: 100%;
-        padding: 12px;
-    }
+   .grid-container {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr); /* Retour à 2 colonnes */
+    gap: 16px; /* Un peu plus d'espace entre les boutons */
+    width: 100%;
+    padding: 12px;
+}
 
-    .q-card {
-        border: 2px solid #e2e8f0; /* Supprimez le !important ici */
-        cursor: pointer !important;
-        border-radius: 20px !important;
-    }
+.q-card {
+    border: 2px solid #e2e8f0;
+    cursor: pointer !important;
+    border-radius: 20px !important;
+    height: 140px; /* Ajout d'une hauteur pour plus de présence */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+}
 
     /* --- FIX DU HEADER (Verrouillage 1 ligne) --- */
     .sticky-header {

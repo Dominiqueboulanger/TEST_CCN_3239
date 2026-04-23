@@ -9,70 +9,75 @@ STYLE_CSS = '''
         padding: 0;
     }
 
-    /* --- ZOOM SÉCURISÉ POUR LES CLICS --- */
-    /*.zoom-page {
-       /* transform: scale(0.92);
-        /*transform-origin: top center;
-       /* width: 108.7% !important; /* Compense le scale pour les clics */
-       /* margin-left: -4.35%;       /* Recentrage manuel */
-        /*pointer-events: auto !important;
-    /*}
-
-    /* --- ANIMATION --- */
+    /* --- ANIMATION (Optimisée) --- */
     @keyframes entranceAnim {
-        0% { transform: translateY(200px); opacity: 0; }
-        60% { transform: translateY(-40px); opacity: 1; }
+        0% { transform: translateY(50px); opacity: 0; }
         100% { transform: translateY(0); opacity: 1; }
     }
 
     .animate-entrance {
-        animation: entranceAnim 2s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
+        animation: entranceAnim 0.8s cubic-bezier(0.16, 1, 0.3, 1) forwards !important;
         background-color: #1e293b !important;
         color: white !important;
     }
 
-   .grid-container {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr); /* Retour à 2 colonnes */
-    gap: 16px; /* Un peu plus d'espace entre les boutons */
-    width: 100%;
-    padding: 12px;
-}
+    /* --- GRILLE (Gain de place ici) --- */
+    .grid-container {
+        display: grid;
+        grid-template-columns: repeat(2, 1fr);
+        gap: 10px; /* On passe de 16px à 10px */
+        width: 100%;
+        padding: 8px 12px; /* On réduit le padding haut/bas */
+    }
 
-.q-card {
-    border: 2px solid #e2e8f0;
-    cursor: pointer !important;
-    border-radius: 20px !important;
-    height: 140px; /* Ajout d'une hauteur pour plus de présence */
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-}
+    /* --- CARTES MÉTIERS (Le secret est ici) --- */
+    .q-card {
+        border: 2px solid #e2e8f0;
+        cursor: pointer !important;
+        border-radius: 20px !important;
+        height: 100px !important; /* On passe de 140px à 100px pour gagner 120px au total */
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        padding: 4px !important;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.05) !important;
+    }
 
-    /* --- FIX DU HEADER (Verrouillage 1 ligne) --- */
+    /* Réduction de la taille du texte dans les cartes pour que ça reste harmonieux */
+    .q-card label {
+        font-size: 11px !important;
+        line-height: 1.1 !important;
+    }
+
+    .q-card i {
+        font-size: 1.3rem !important; /* Icônes légèrement plus petites */
+        margin-bottom: 2px !important;
+    }
+
+    /* --- FIX DU HEADER (Très serré) --- */
     .sticky-header {
         position: sticky;
         top: 0;
         z-index: 1000;
-        background-color: rgba(248, 250, 252, 0.9);
+        background-color: rgba(248, 250, 252, 0.95);
         backdrop-filter: blur(8px);
         -webkit-backdrop-filter: blur(8px);
         border-bottom: 1px solid #e2e8f0;
         width: 100%;
-        height: 50px; /* On force une hauteur fixe assez basse */
-        /* Empêche le contenu de déborder ou de créer une 2ème ligne */
+        height: 44px; /* On passe de 50px à 44px (standard iOS) */
         overflow: hidden; 
     }
 
-    /* Force le conteneur flex à ne pas wrapper */
     .header-row {
         display: flex !important;
         flex-wrap: nowrap !important;
         align-items: center !important;
         justify-content: space-between !important;
         width: 100%;
-        height: 100%; /* Pour centrer verticalement dans les 50px */
+        height: 100%;
+        padding: 0 12px !important;
     }
 '''
 
-BTN_STYLE = "w-full h-auto py-4 bg-white text-black border-2 border-slate-200 rounded-xl px-4 text-center mb-3 font-medium shadow-sm"
+# On allège aussi un peu les boutons des étapes suivantes
+BTN_STYLE = "w-full h-auto py-3 bg-white text-black border-2 border-slate-200 rounded-xl px-4 text-center mb-2 font-medium shadow-sm uppercase text-sm"

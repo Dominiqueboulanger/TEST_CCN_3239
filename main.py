@@ -219,22 +219,23 @@ def build_ui(state, h_zone, c_zone):
 
 @ui.page('/')
 def main_page():
-    # 1. Injection du CSS ET du Viewport pour mobile
-    # C'est ici qu'on force l'iPhone à bien afficher le site
+    # 1. On remet FontAwesome et on garde le viewport
     ui.add_head_html(f'''
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <style>{css.STYLE_CSS}</style>
     ''')
 
-    # 2. Structure principale
-    with ui.column().classes('w-full items-center min-h-screen'):
-        user_state = AppState()
-        # h_zone utilise la classe 'sticky-header' définie dans css.py
-        h_zone = ui.column().classes('sticky-header') 
-        c_zone = ui.column().classes('w-full max-w-md mx-auto p-4 gap-2 items-center')
-        
-        # Lancement de l'interface
-        build_ui(user_state, h_zone, c_zone)
+    # 2. On évite la colonne parente "w-full items-center" qui englobe tout
+    # On crée l'état et les zones directement
+    user_state = AppState()
+    
+    # On garde les zones séparées comme dans la version qui marchait
+    h_zone = ui.column().classes('w-full sticky-header')
+    c_zone = ui.column().classes('w-full max-w-md mx-auto p-4 gap-2 items-center')
+    
+    # Lancement de l'interface
+    build_ui(user_state, h_zone, c_zone)
         
 # --- LANCEMENT SERVEUR ---
 # Modification recommandée

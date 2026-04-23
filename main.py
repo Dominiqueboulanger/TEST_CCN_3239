@@ -86,6 +86,14 @@ def build_ui(state, h_zone, c_zone):
     with c_zone:
         # --- ÉTAPE 1 : ACCUEIL ---
         if state.step == 1:
+            # 1. ON PRÉPARE LE DIALOGUE UNE SEULE FOIS (pour éviter le crash JS sur mobile)
+            with ui.dialog() as direct_dialog, ui.card().classes('items-center'):
+                ui.label(txt['search_label']).classes('font-bold')
+                i_direct = ui.input(placeholder="Ex: 139").classes('w-full')
+                with ui.row():
+                    ui.button(txt['search_btn'], on_click=lambda: (set_step('DIRECT', {'art_cible': i_direct.value}), direct_dialog.close()))
+                    ui.button('Fermer', on_click=direct_dialog.close).props('flat')
+
             with ui.column().classes('w-full items-center'):
                 METIERS_DATA = [
                     {"c": "art_am", "fr": "Assistant Maternel", "en": "Childminder", "icon": "fa-baby-carriage"},
@@ -101,37 +109,33 @@ def build_ui(state, h_zone, c_zone):
                 with ui.element('div').classes('grid-container w-full'):
                     for m in METIERS_DATA:
                         label_affiche = m['fr'] if state.lang == 'FR' else m['en']
-                        border_color = 'border-[#10b981]' if m.get('is_direct') else 'border-slate-200'
+                        is_special = m.get('is_direct', False)
+                        border_color = 'border-[#10b981]' if is_special else 'border-slate-200'
                         
-                        def handle_click(m=m, l=label_affiche):
-                            if m.get('is_direct'):
-                                d = ui.dialog()
-                                with d, ui.card():
-                                    ui.label('Entrez le numéro d\'article')
-                                    i = ui.input()
-                                    ui.button('Valider', on_click=lambda: (set_step('DIRECT', {'art_cible': i.value}), d.close()))
-                                d.open()
-                            else:
-                                set_step(2, {'colonne_metier': m['c'], 'label_metier': l})
+                        # 2. GESTION DU CLIC : On sépare bien les deux cas
+                        if is_special:
+                            # Ouvre simplement le dialogue déjà créé
+                            on_click_action = direct_dialog.open
+                        else:
+                            # Capture correctement les valeurs de m et l pour la boucle
+                            on_click_action = lambda m=m, l=label_affiche: set_step(2, {'colonne_metier': m['c'], 'label_metier': l})
 
-                        with ui.card().classes(f'w-full bg-white cursor-pointer p-4 transition-all border-2 {border_color}').on('click', handle_click):
+                        with ui.card().classes(f'w-full bg-white cursor-pointer p-4 transition-all border-2 {border_color}') \
+                            .on('click', on_click_action):
+                            
                             with ui.column().classes('items-center justify-center w-full gap-2'):
-                                # 1. Gestion de l'icône
-                                if not m.get('is_direct'):
+                                if not is_special:
+                                    # Icônes standards
                                     ui.html(f'<i class="fa-solid {m["icon"]} text-2xl text-black"></i>')
-                                
-                                # 2. Gestion du texte (c'est ici que ça change)
-                                if m.get('is_direct'):
-                                    # Pour le bouton vert : on force le saut de ligne
-                                    ui.html('<div style="text-align: center; font-weight: bold; line-height: 1.2; text-transform: uppercase;">'
-                                            'ARTICLE<br>CCN 3239<br>EN 1 CLIC</div>').classes('text-[14px] text-slate-800')
+                                    ui.label(label_affiche).classes('text-[14px] font-bold text-center text-slate-800 uppercase leading-tight')
                                 else:
-                                    # Pour les autres : affichage standard
-                                    ui.label(label_affiche).classes('text-[14px] font-bold text-center text-slate-800 uppercase leading-tight')    
+                                    # Bouton Vert "1 CLIC" (On simplifie le HTML pour le mobile)
+                                    ui.html(f'<i class="fa-solid {m["icon"]} text-2xl text-[#10b981] mb-1"></i>')
+                                    ui.label("ARTICLE CCN 3239 EN 1 CLIC").classes('text-[12px] font-black text-center text-slate-800 leading-tight')
+
                 ui.separator().classes('my-4 w-11/12')
                 ui.button(txt['annexes_btn'], on_click=lambda: set_step('LISTE_ANNEXES')) \
                     .classes('w-full py-4 bg-slate-800 text-white rounded-2xl font-bold animate-entrance shadow-lg')
-
         # --- ÉTAPE 2 : GESTION / FIN ---
         elif state.step == 2:
             ui.label(txt['step2_title']).classes('text-lg font-bold text-slate-700 w-full mb-2 px-2')

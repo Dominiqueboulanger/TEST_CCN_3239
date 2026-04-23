@@ -84,7 +84,11 @@ def build_ui(state, h_zone, c_zone):
                 ui.button('🇬🇧', on_click=lambda: (setattr(state, 'lang', 'EN'), build_ui.refresh())).props('flat').classes('text-xl p-0')
 
     with c_zone:
-        
+        # --- BOUTON ACCUEIL (S'affiche sur toutes les pages sauf l'accueil) ---
+        if state.step != 1:
+            ui.button(txt['home'], on_click=lambda: set_step(1)) \
+                .props('flat dense icon=home color=primary') \
+                .classes('w-full mb-4 text-slate-500 border-b pb-2')
         # --- ÉTAPE 1 : ACCUEIL ---
         if state.step == 1:
             with ui.dialog() as direct_dialog, ui.card().classes('items-center'):

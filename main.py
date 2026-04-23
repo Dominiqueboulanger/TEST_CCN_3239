@@ -138,7 +138,7 @@ def build_ui(state, h_zone, c_zone):
                                     ui.html(f'<i class="fa-solid {m["icon"]} text-[#10b981]"></i>')
                                     ui.label("ARTICLE CCN\n3239\nEN 1 CLIC").classes('special-label text-center text-slate-800 leading-tight').style('white-space: pre-line;')
                 
-                # Ajout du bouton ANNEXES qui avait disparu ou s'était décalé
+                 # Ajout du bouton ANNEXES qui avait disparu ou s'était décalé
                 ui.separator().classes('my-2 w-11/12')
                 ui.button(txt['annexes_btn'], on_click=lambda: set_step('LISTE_ANNEXES')) \
                     .classes('w-full py-4 animate-entrance shadow-lg text-sm rounded-2xl') 

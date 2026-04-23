@@ -99,7 +99,7 @@ def build_ui(state, h_zone, c_zone):
                     {"c": "art_ef", "fr": "Employé Familial", "en": "Family Employee", "icon": "fa-house-user"},
                     {"c": "art_ef", "fr": "Assistant de Vie", "en": "Life Assistant", "icon": "fa-wheelchair"},
                     {"c": "art_sc", "fr": "Autres métiers CESU", "en": "Other jobs (CESU)", "icon": "fa-briefcase"},
-                    {"c": "DIRECT", "fr": "Accès direct", "en": "Direct Access", "icon": "fa-book-open", "is_direct": True}
+                    {"c": "DIRECT", "fr": "Article CCN 3239 en 1 clic", "en": "Direct Access", "icon": "fa-book-open", "is_direct": True}
                 ]
                 
                 ui.label(txt['step1_title']).classes('text-xl font-bold text-slate-800 w-full mb-2 px-2')

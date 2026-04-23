@@ -10,13 +10,13 @@ STYLE_CSS = '''
     }
 
     /* --- ZOOM SÉCURISÉ POUR LES CLICS --- */
-    .zoom-page {
-        transform: scale(0.92);
-        transform-origin: top center;
-        width: 108.7% !important; /* Compense le scale pour les clics */
-        margin-left: -4.35%;       /* Recentrage manuel */
-        pointer-events: auto !important;
-    }
+    /*.zoom-page {
+       /* transform: scale(0.92);
+        /*transform-origin: top center;
+       /* width: 108.7% !important; /* Compense le scale pour les clics */
+       /* margin-left: -4.35%;       /* Recentrage manuel */
+        /*pointer-events: auto !important;
+    /*}
 
     /* --- ANIMATION --- */
     @keyframes entranceAnim {

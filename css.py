@@ -34,7 +34,7 @@ STYLE_CSS = '''
     /* --- GRILLE ET CARTES --- */
     .grid-container {
         display: grid;
-        grid-template-columns: repeat(2, 1fr);
+        grid-template-columns: repeat(3, 1fr);
         gap: 12px;
         width: 100%;
         padding: 12px;

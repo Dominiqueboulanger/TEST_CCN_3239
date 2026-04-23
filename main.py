@@ -219,9 +219,12 @@ def build_ui(state, h_zone, c_zone):
 
 @ui.page('/')
 def main_page():
-    # 1. Injection du CSS depuis le fichier css.py
-    # C'est cette ligne qui lie le design (css.py) à la structure (main.py)
-    ui.add_head_html(f'<style>{css.STYLE_CSS}</style>')
+    # 1. Injection du CSS ET du Viewport pour mobile
+    # C'est ici qu'on force l'iPhone à bien afficher le site
+    ui.add_head_html(f'''
+        <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+        <style>{css.STYLE_CSS}</style>
+    ''')
 
     # 2. Structure principale
     with ui.column().classes('w-full items-center min-h-screen'):

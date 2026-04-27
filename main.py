@@ -5,24 +5,19 @@ import os
 import sqlite3
 
 # --- CONFIGURATION FICHIERS STATIQUES ---
-# On récupère le chemin du dossier où se trouve main.py
-current_dir = os.path.dirname(os.path.abspath(__file__))
-# On pointe vers le dossier 'static' qui est dans ce même dossier
-static_path = os.path.join(current_dir, 'static')
-
-# On active le service de fichiers statiques
+# Cette ligne est magique : elle trouve le dossier 'static' peu importe où l'app est lancée
+static_path = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'static')
 app.add_static_files('/static', static_path)
 
-
-# --- CLASSE D'ÉTAT (UNE PAR UTILISATEUR) ---
+# --- CLASSE D'ÉTAT ---
 class AppState:
     def __init__(self):
-        self.step = 0  # Démarrage sur le Splash Screen (Image)
+        self.step = 0  
         self.lang = 'FR'
         self.choix = {}
         self.code_metier_affiche = ""
         self.art_cible = ""
-        self.annexe_selectionnee = None 
+        self.annexe_selectionnee = None
 
 # --- FONCTION DE RENDU DES ARTICLES ---
 def render_result(num_article, txt, current_state):

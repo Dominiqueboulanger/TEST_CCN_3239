@@ -4,13 +4,13 @@ import css
 import os
 import sqlite3
 
- # --- CONFIGURATION FICHIERS STATIQUES ---
+# --- CONFIGURATION FICHIERS STATIQUES ---
 app.add_static_files('/static', 'static')
 
 # --- CLASSE D'ÉTAT (UNE PAR UTILISATEUR) ---
 class AppState:
     def __init__(self):
-        self.step = 1
+        self.step = 0  # Démarrage sur le Splash Screen (Image)
         self.lang = 'FR'
         self.choix = {}
         self.code_metier_affiche = ""
@@ -75,21 +75,33 @@ def build_ui(state, h_zone, c_zone):
     }
     txt = UI_TEXT[state.lang]
 
+    # --- HEADER ---
     with h_zone:
-        with ui.row().classes('w-full px-4 py-3 header-row'):
-            ui.label(state.code_metier_affiche if state.code_metier_affiche else 'CCN 3239') \
-                .classes('text-blue-600 font-black text-base truncate flex-shrink')
-            with ui.row().classes('gap-3 flex-nowrap items-center flex-none'):
-                ui.button('🇫🇷', on_click=lambda: (setattr(state, 'lang', 'FR'), build_ui.refresh())).props('flat').classes('text-xl p-0')
-                ui.button('🇬🇧', on_click=lambda: (setattr(state, 'lang', 'EN'), build_ui.refresh())).props('flat').classes('text-xl p-0')
+        # On ne montre le header que si on n'est pas sur le Splash Screen
+        if state.step != 0:
+            with ui.row().classes('w-full px-4 py-3 header-row'):
+                ui.label(state.code_metier_affiche if state.code_metier_affiche else 'CCN 3239') \
+                    .classes('text-blue-600 font-black text-base truncate flex-shrink')
+                with ui.row().classes('gap-3 flex-nowrap items-center flex-none'):
+                    ui.button('🇫🇷', on_click=lambda: (setattr(state, 'lang', 'FR'), build_ui.refresh())).props('flat').classes('text-xl p-0')
+                    ui.button('🇬🇧', on_click=lambda: (setattr(state, 'lang', 'EN'), build_ui.refresh())).props('flat').classes('text-xl p-0')
 
+    # --- CONTENU PRINCIPAL ---
     with c_zone:
-        # --- BOUTON ACCUEIL (S'affiche sur toutes les pages sauf l'accueil) ---
-        if state.step != 1:
+        # --- ÉTAPE 0 : SPLASH SCREEN (IMAGE D'ACCUEIL) ---
+        if state.step == 0:
+            with ui.column().classes('w-full items-center justify-center no-wrap animate-entrance'):
+                with ui.element('div').classes('cursor-pointer shadow-2xl rounded-3xl overflow-hidden').on('click', lambda: set_step(1)):
+                    ui.image('/static/accueil.jpg').style('width: 100%; max-width: 400px;')
+                ui.label('Touchez pour entrer').classes('mt-6 text-slate-400 font-medium animate-pulse uppercase tracking-widest text-xs')
+
+        # --- BOUTON ACCUEIL (S'affiche partout sauf accueil et splash) ---
+        elif state.step != 1:
             ui.button(txt['home'], on_click=lambda: set_step(1)) \
                 .props('flat dense icon=home color=primary') \
                 .classes('w-full mb-4 text-slate-500 border-b pb-2')
-        # --- ÉTAPE 1 : ACCUEIL ---
+
+        # --- ÉTAPE 1 : CHOIX DU MÉTIER ---
         if state.step == 1:
             with ui.dialog() as direct_dialog, ui.card().classes('items-center'):
                 ui.label(txt['search_label']).classes('font-bold')
@@ -119,17 +131,14 @@ def build_ui(state, h_zone, c_zone):
                         if is_special:
                             on_click_action = direct_dialog.open
                         else:
-                            # Utilisation d'une fonction nommée pour éviter les problèmes de capture de variable
                             def create_click(m_code=m['c'], m_label=label_affiche):
                                 return lambda: set_step(2, {'colonne_metier': m_code, 'label_metier': m_label})
                             on_click_action = create_click()
 
-                        # LA CARTE : On ajoute 'native' et on gère le clic proprement
                         card = ui.card().classes(f'w-full bg-white p-4 border-2 {border_color} shadow-sm cursor-pointer active:opacity-50')
-                        card.on('click', on_click_action) # Événement standard
+                        card.on('click', on_click_action) 
                         
                         with card:
-                            # pointer-events-none est INDISPENSABLE ici pour que le clic touche la carte
                             with ui.column().classes('items-center justify-center w-full gap-1 pointer-events-none'):
                                 if not is_special:
                                     ui.html(f'<i class="fa-solid {m["icon"]} text-black"></i>')
@@ -138,11 +147,11 @@ def build_ui(state, h_zone, c_zone):
                                     ui.html(f'<i class="fa-solid {m["icon"]} text-[#10b981]"></i>')
                                     ui.label("ARTICLE CCN\n3239\nEN 1 CLIC").classes('special-label text-center text-slate-800 leading-tight').style('white-space: pre-line;')
                 
-                 # Ajout du bouton ANNEXES qui avait disparu ou s'était décalé
                 ui.separator().classes('my-2 w-11/12')
                 ui.button(txt['annexes_btn'], on_click=lambda: set_step('LISTE_ANNEXES')) \
                     .classes('w-full py-4 animate-entrance shadow-lg text-sm rounded-2xl') 
-    # --- ÉTAPE 2 : GESTION / FIN ---
+
+        # --- ÉTAPE 2 : GESTION / FIN ---
         elif state.step == 2:
             ui.label(txt['step2_title']).classes('text-lg font-bold text-slate-700 w-full mb-2 px-2')
             f = f"WHERE {col_filtre} IS NOT NULL AND {col_filtre} != ''"
@@ -219,58 +228,43 @@ def build_ui(state, h_zone, c_zone):
             
             if res:
                 resume = res['resume_fr'] if state.lang == 'FR' else res['resume_en']
-                
-                # On utilise la nouvelle structure "annexe-container"
                 with ui.column().classes('annexe-container'):
-                    
-                    # 1. Titre et Numéro (Bien séparés)
                     with ui.element('div').classes('annexe-title-section'):
                         ui.label(f"ANNEXE N°{res['numero']}").classes('text-blue-600 font-bold uppercase text-xs tracking-widest')
                         ui.label(res['titre']).classes('text-2xl font-black text-slate-800 leading-tight')
 
-                    # 2. Le Résumé (Dans sa propre carte propre)
                     with ui.element('div').classes('annexe-card-info'):
                         ui.markdown(resume if resume else "Résumé à venir...").classes('text-slate-700 leading-relaxed')
 
-                    # 3. Zone Téléchargement (Espacée)
                     with ui.card().classes('w-full bg-red-50 p-4 border border-red-100 rounded-2xl items-center mt-4'):
                         ui.label(txt['official_pdf']).classes('text-red-900 font-bold mb-2')
                         pdf_url = f"/static/Annexe_{res['numero']}.pdf"
                         ui.button("TÉLÉCHARGER LE PDF", icon='download', on_click=lambda: ui.download(pdf_url)) \
                             .props('elevated color=red-800').classes('rounded-full')
 
-                    # 4. Bouton Retour
                     ui.button(txt['back'], on_click=lambda: set_step('LISTE_ANNEXES')) \
                         .props('flat icon=arrow_back').classes('w-full text-slate-400 mt-4')
 
 @ui.page('/')
 def main_page():
-    # 1. On remet FontAwesome et on garde le viewport
     ui.add_head_html(f'''
         <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
         <style>{css.STYLE_CSS}</style>
     ''')
 
-    # 2. On évite la colonne parente "w-full items-center" qui englobe tout
-    # On crée l'état et les zones directement
     user_state = AppState()
-    
-    # On garde les zones séparées comme dans la version qui marchait
     h_zone = ui.column().classes('w-full sticky-header')
     c_zone = ui.column().classes('w-full max-w-md mx-auto p-4 gap-2 items-center')
     
-    # Lancement de l'interface
     build_ui(user_state, h_zone, c_zone)
         
 # --- LANCEMENT SERVEUR ---
-# Modification recommandée
 ui.run(
     title="Guide CCN", 
     host='0.0.0.0', 
     port=int(os.environ.get("PORT", 9000)), 
     reload=False,
-    # Ces deux paramètres aident à stabiliser la connexion derrière un proxy
     uvicorn_logging_level='info',
     show=False 
 )

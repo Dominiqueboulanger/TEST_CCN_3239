@@ -88,11 +88,11 @@ def build_ui(state, h_zone, c_zone):
         # --- ÉTAPE 0 : SPLASH SCREEN ---
         if state.step == 0:
             with ui.column().classes('w-full items-center justify-center no-wrap animate-entrance'):
-                # On s'assure que l'élément cliquable englobe bien l'image
-                with ui.card().classes('cursor-pointer shadow-2xl rounded-3xl overflow-hidden mt-4 p-0').on('click', lambda: set_step(1)):
+                # Utilisation d'un bouton transparent qui englobe l'image pour un clic garanti
+                with ui.button(on_click=lambda: set_step(1)).props('flat').classes('p-0 m-0 rounded-3xl overflow-hidden shadow-2xl'):
                     ui.image('/static/accueil.jpg').style('width: 100%; max-width: 380px;')
                 
-                ui.label("Touchez l'écran pour démarrer").classes('mt-8 text-slate-400 font-medium animate-pulse uppercase tracking-widest text-[10px]')
+                ui.label("Touchez l'image pour démarrer").classes('mt-8 text-slate-400 font-medium animate-pulse uppercase tracking-widest text-[10px]')
             return
 
         # --- BOUTON ACCUEIL (Position correcte : au-dessus des étapes) ---
@@ -284,7 +284,7 @@ ui.run(
     host='0.0.0.0', 
     port=int(os.environ.get("PORT", 9000)), 
     reload=False,
-    # Ces deux paramètres aident à stabiliser la connexion derrière un proxy
-    uvicorn_logging_level='info',
+    # Augmente la tolérance aux coupures réseau
+    reconnect_timeout=30,
     show=False 
 )

@@ -89,19 +89,17 @@ def build_ui(state, h_zone, c_zone):
      
         # --- ÉTAPE 0 : SPLASH SCREEN ---
         if state.step == 0:
-            # On utilise une marge négative plus forte pour "coller" l'image au sommet de l'écran
-            # justify-start pour ne pas laisser de vide en haut
-            with ui.column().classes('w-full items-center justify-start no-wrap h-screen -mt-[85px] p-0 bg-white'):
+            # On remonte encore plus (-mt-95) pour coller au sommet
+            # On utilise h-screen pour occuper tout l'espace disponible
+            with ui.column().classes('w-full items-center justify-start no-wrap h-screen -mt-[95px] p-0 bg-white'):
                 
-                # Le bouton : on lui donne une taille fixe et on s'assure qu'il est cliquable immédiatement
+                # Le bouton occupe désormais 85% de la hauteur de l'écran (85vh)
+                # Cela permet de voir tout le bas de ton image
                 with ui.button(on_click=lambda: set_step(1)).props('flat') \
-                    .classes('p-0 m-0 rounded-b-3xl overflow-hidden shadow-xl w-full max-w-[400px] h-[78vh]'):
+                    .classes('p-0 m-0 rounded-b-3xl overflow-hidden shadow-xl w-full max-w-[420px] h-[85vh]'):
                     
-                    # object-top : pour que le haut de la photo (le texte important) soit toujours visible
+                    # object-top : Toujours prioriser le haut de l'image
                     ui.image('/static/accueil.jpg').classes('w-full h-full object-cover object-top')
-                
-                # Instruction plus proche de l'image
-                ui.label("Touchez l'image pour démarrer").classes('mt-6 text-slate-400 font-bold animate-pulse uppercase tracking-widest text-[11px]')
             return
 
 

@@ -17,7 +17,24 @@ STYLE_CSS = '''
     }
     .q-card label { font-size: 11px !important; line-height: 1.1 !important; }
     .q-card i { font-size: 1.3rem !important; margin-bottom: 2px !important; }
-
+    
+    /* Force l'aspect cliquable et supprime les marges par défaut de NiceGUI sur les cartes */
+    .grid-container .q-card {
+        cursor: pointer;
+        transition: transform 0.1s, background-color 0.1s;
+    }
+    
+    .grid-container .q-card:active {
+        background-color: #f1f5f9 !important;
+        transform: scale(0.96);
+    }
+    
+    /* Style spécifique pour le label "ARTICLE CCN 1 CLIC" */
+    .special-label {
+        font-size: 10px !important;
+        font-weight: 900 !important;
+        color: #065f46 !important;
+    }
     /* --- HEADER --- */
     .sticky-header {
         position: sticky; top: 0; z-index: 1000;

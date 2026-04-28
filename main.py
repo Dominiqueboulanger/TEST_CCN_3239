@@ -83,15 +83,27 @@ def build_ui(state, h_zone, c_zone):
                 ui.button('🇫🇷', on_click=lambda: (setattr(state, 'lang', 'FR'), build_ui.refresh())).props('flat').classes('text-xl p-0')
                 ui.button('🇬🇧', on_click=lambda: (setattr(state, 'lang', 'EN'), build_ui.refresh())).props('flat').classes('text-xl p-0')
 
-    with c_zone:
-        # --- BOUTON ACCUEIL (S'affiche sur toutes les pages sauf l'accueil) ---
-        if state.step != 1:
+   with c_zone:
+        # --- ÉTAPE 0 : SPLASH SCREEN (ÉCRAN D'ACCUEIL) ---
+        if state.step == 0:
+            with ui.column().classes('w-full items-center justify-center no-wrap animate-entrance'):
+                with ui.element('div').classes('cursor-pointer shadow-2xl rounded-3xl overflow-hidden mt-4').on('click', lambda: set_step(1)):
+                    ui.image('/static/accueil.jpg').style('width: 100%; max-width: 380px;')
+                
+                ui.label("Touchez l'écran pour démarrer").classes('mt-8 text-slate-400 font-medium animate-pulse uppercase tracking-widest text-[10px]')
+            return # STOPS HERE FOR STEP 0
+
+        # --- BOUTON ACCUEIL (Position correcte : au-dessus des étapes) ---
+        if state.step not in [0, 1]:
             ui.button(txt['home'], on_click=lambda: set_step(1)) \
                 .props('flat dense icon=home color=primary') \
                 .classes('w-full mb-4 text-slate-500 border-b pb-2')
+
         # --- ÉTAPE 1 : ACCUEIL ---
         if state.step == 1:
             with ui.dialog() as direct_dialog, ui.card().classes('items-center'):
+                # ... la suite de ton code (ui.label(txt['search_label']), etc.)
+           
                 ui.label(txt['search_label']).classes('font-bold')
                 i_direct = ui.input(placeholder="Ex: 139").classes('w-full')
                 with ui.row():

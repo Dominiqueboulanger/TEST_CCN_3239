@@ -76,23 +76,24 @@ def build_ui(state, h_zone, c_zone):
     txt = UI_TEXT[state.lang]
 
     with h_zone:
-       if state.step != 0:
-        with ui.row().classes('w-full px-4 py-3 header-row'):
-            ui.label(state.code_metier_affiche if state.code_metier_affiche else 'CCN 3239') \
-                .classes('text-blue-600 font-black text-base truncate flex-shrink')
-            with ui.row().classes('gap-3 flex-nowrap items-center flex-none'):
-                ui.button('🇫🇷', on_click=lambda: (setattr(state, 'lang', 'FR'), build_ui.refresh())).props('flat').classes('text-xl p-0')
-                ui.button('🇬🇧', on_click=lambda: (setattr(state, 'lang', 'EN'), build_ui.refresh())).props('flat').classes('text-xl p-0')
+        if state.step != 0:
+            with ui.row().classes('w-full px-4 py-3 header-row'):
+                ui.label(state.code_metier_affiche if state.code_metier_affiche else 'CCN 3239') \
+                    .classes('text-blue-600 font-black text-base truncate flex-shrink')
+                with ui.row().classes('gap-3 flex-nowrap items-center flex-none'):
+                    ui.button('🇫🇷', on_click=lambda: (setattr(state, 'lang', 'FR'), build_ui.refresh())).props('flat').classes('text-xl p-0')
+                    ui.button('🇬🇧', on_click=lambda: (setattr(state, 'lang', 'EN'), build_ui.refresh())).props('flat').classes('text-xl p-0')
 
-   with c_zone:
-        # --- ÉTAPE 0 : SPLASH SCREEN (ÉCRAN D'ACCUEIL) ---
+    with c_zone:
+        # --- ÉTAPE 0 : SPLASH SCREEN ---
         if state.step == 0:
             with ui.column().classes('w-full items-center justify-center no-wrap animate-entrance'):
-                with ui.element('div').classes('cursor-pointer shadow-2xl rounded-3xl overflow-hidden mt-4').on('click', lambda: set_step(1)):
+                # On s'assure que l'élément cliquable englobe bien l'image
+                with ui.card().classes('cursor-pointer shadow-2xl rounded-3xl overflow-hidden mt-4 p-0').on('click', lambda: set_step(1)):
                     ui.image('/static/accueil.jpg').style('width: 100%; max-width: 380px;')
                 
                 ui.label("Touchez l'écran pour démarrer").classes('mt-8 text-slate-400 font-medium animate-pulse uppercase tracking-widest text-[10px]')
-            return # STOPS HERE FOR STEP 0
+            return
 
         # --- BOUTON ACCUEIL (Position correcte : au-dessus des étapes) ---
         if state.step not in [0, 1]:

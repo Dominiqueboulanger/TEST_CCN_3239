@@ -88,12 +88,12 @@ def build_ui(state, h_zone, c_zone):
         # --- ÉTAPE 0 : SPLASH SCREEN ---
         if state.step == 0:
             with ui.column().classes('w-full items-center justify-center no-wrap animate-entrance'):
-                # Utilisation d'un bouton transparent qui englobe l'image pour un clic garanti
-                with ui.button(on_click=lambda: set_step(1)).props('flat').classes('p-0 m-0 rounded-3xl overflow-hidden shadow-2xl'):
-                    ui.image('/static/accueil.jpg').style('width: 100%; max-width: 380px;')
+                # On ajoute une largeur fixe au bouton pour qu'il existe même si l'image charge mal
+                with ui.button(on_click=lambda: set_step(1)).props('flat').classes('p-0 m-0 rounded-3xl overflow-hidden shadow-2xl w-full max-w-[380px]'):
+                    ui.image('/static/accueil.jpg').classes('w-full') # Enlève le style inline, utilise les classes
                 
                 ui.label("Touchez l'image pour démarrer").classes('mt-8 text-slate-400 font-medium animate-pulse uppercase tracking-widest text-[10px]')
-            return
+            return # Garde-le, mais assure-toi que h_zone est bien géré
 
         # --- BOUTON ACCUEIL (Position correcte : au-dessus des étapes) ---
         if state.step not in [0, 1]:

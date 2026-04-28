@@ -85,18 +85,13 @@ def build_ui(state, h_zone, c_zone):
                     ui.button('🇬🇧', on_click=lambda: (setattr(state, 'lang', 'EN'), build_ui.refresh())).props('flat').classes('text-xl p-0')
 
     with c_zone:
-        with c_zone:
         # --- ÉTAPE 0 : SPLASH SCREEN ---
-        if state.step == 0:
-            # 1. SOLUTION HAUTEUR : On enlève le mt-[44px] juste pour cet écran
-            # On ajoute h-screen pour forcer l'image à prendre toute la hauteur de l'écran
+        if state.step == 0: # <-- Cette ligne DOIT être décalée par rapport au 'with'
             with ui.column().classes('w-full items-center justify-center no-wrap h-screen -mt-[44px] p-0'):
-                
-                # 2. SOLUTION CLIC : On force une largeur au bouton pour qu'il existe physiquement
+                # Le bouton avec une taille forcée pour garantir le clic
                 with ui.button(on_click=lambda: set_step(1)).props('flat') \
                     .classes('p-0 m-0 rounded-3xl overflow-hidden shadow-2xl w-full max-w-[380px] h-[75vh]'):
                     
-                    # On force l'image à remplir son bouton en hauteur (h-full)
                     ui.image('/static/accueil.jpg').classes('h-full object-cover')
                 
                 ui.label("Touchez l'image pour démarrer").classes('mt-4 text-slate-400 font-medium animate-pulse uppercase tracking-widest text-[10px]')

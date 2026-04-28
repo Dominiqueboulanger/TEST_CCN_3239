@@ -76,6 +76,7 @@ def build_ui(state, h_zone, c_zone):
     txt = UI_TEXT[state.lang]
 
     with h_zone:
+       if state.step != 0:
         with ui.row().classes('w-full px-4 py-3 header-row'):
             ui.label(state.code_metier_affiche if state.code_metier_affiche else 'CCN 3239') \
                 .classes('text-blue-600 font-black text-base truncate flex-shrink')

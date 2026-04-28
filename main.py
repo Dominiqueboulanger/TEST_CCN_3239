@@ -10,7 +10,7 @@ app.add_static_files('/static', 'static')
 # --- CLASSE D'ÉTAT (UNE PAR UTILISATEUR) ---
 class AppState:
     def __init__(self):
-        self.step = 1
+        self.step = 0
         self.lang = 'FR'
         self.choix = {}
         self.code_metier_affiche = ""

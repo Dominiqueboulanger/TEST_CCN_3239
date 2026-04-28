@@ -103,6 +103,9 @@ def build_ui(state, h_zone, c_zone):
                 # Instruction plus proche de l'image
                 ui.label("Touchez l'image pour démarrer").classes('mt-6 text-slate-400 font-bold animate-pulse uppercase tracking-widest text-[11px]')
             return
+
+
+     
         # --- BOUTON ACCUEIL (Position correcte : au-dessus des étapes) ---
         if state.step not in [0, 1]:
             ui.button(txt['home'], on_click=lambda: set_step(1)) \

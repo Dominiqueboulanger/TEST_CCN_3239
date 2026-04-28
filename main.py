@@ -272,7 +272,7 @@ def main_page():
     
     # On garde les zones séparées comme dans la version qui marchait
     h_zone = ui.column().classes('w-full sticky-header')
-    c_zone = ui.column().classes('w-full max-w-md mx-auto p-4 gap-2 items-center')
+   c_zone = ui.column().classes('w-full max-w-md mx-auto p-4 gap-2 items-center mt-[44px]')
     
     # Lancement de l'interface
     build_ui(user_state, h_zone, c_zone)

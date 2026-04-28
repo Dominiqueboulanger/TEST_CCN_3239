@@ -89,19 +89,19 @@ def build_ui(state, h_zone, c_zone):
      
         # --- ÉTAPE 0 : SPLASH SCREEN ---
         if state.step == 0:
-            # On utilise une colonne qui démarre tout en haut (justify-start) 
-            # et on annule la marge du header (-mt)
-            with ui.column().classes('w-full items-center justify-start no-wrap h-screen -mt-[60px] p-0'):
+            # On utilise une marge négative plus forte pour "coller" l'image au sommet de l'écran
+            # justify-start pour ne pas laisser de vide en haut
+            with ui.column().classes('w-full items-center justify-start no-wrap h-screen -mt-[85px] p-0 bg-white'):
                 
-                # Le bouton avec une hauteur fixe pour laisser de la place au texte en bas
+                # Le bouton : on lui donne une taille fixe et on s'assure qu'il est cliquable immédiatement
                 with ui.button(on_click=lambda: set_step(1)).props('flat') \
-                    .classes('p-0 m-0 rounded-3xl overflow-hidden shadow-2xl w-full max-w-[360px] h-[70vh] mt-2'):
+                    .classes('p-0 m-0 rounded-b-3xl overflow-hidden shadow-xl w-full max-w-[400px] h-[78vh]'):
                     
-                    # object-top permet de s'assurer que le haut de l'image (ton texte) est prioritaire
-                    ui.image('/static/accueil.jpg').classes('h-full object-cover object-top')
+                    # object-top : pour que le haut de la photo (le texte important) soit toujours visible
+                    ui.image('/static/accueil.jpg').classes('w-full h-full object-cover object-top')
                 
-                # Le texte d'instruction avec une marge plus courte (mt-4)
-                ui.label("Touchez l'image pour démarrer").classes('mt-4 text-slate-400 font-medium animate-pulse uppercase tracking-widest text-[10px]')
+                # Instruction plus proche de l'image
+                ui.label("Touchez l'image pour démarrer").classes('mt-6 text-slate-400 font-bold animate-pulse uppercase tracking-widest text-[11px]')
             return
         # --- BOUTON ACCUEIL (Position correcte : au-dessus des étapes) ---
         if state.step not in [0, 1]:

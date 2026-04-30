@@ -34,9 +34,7 @@ class AppState:
 # =============================================
 # 3. FONCTION render_result : AFFICHAGE D'UN ARTICLE
 # =============================================
-# =============================================
-# 3. FONCTION render_result : AFFICHAGE D'UN ARTICLE
-# =============================================
+
 import re
 
 def render_result(num_article, txt, current_state):
@@ -66,18 +64,22 @@ def render_result(num_article, txt, current_state):
             with ui.expansion(txt.get('official', '⚖️ Texte officiel')).classes('w-full text-sm text-slate-500 border-t mt-4'):
                 ui.markdown(art['texte_integral']).classes('text-[12px] italic')
                 
-                # --- TEST DE FORCE BRUTE ---
-                # On récupère TOUS les nombres présents dans le texte intégral
-                tous_les_nombres = re.findall(r"\d+", art['texte_integral'])
+                # --- NOUVELLE LOGIQUE DE DÉTECTION PRÉCISE ---
+                # On cherche "article" précédé optionnellement de l' ou l’
+                # \b assure qu'on ne prend pas un mot contenant "article" au milieu
+                # \s+ gère un ou plusieurs espaces
+                regex_article = r"(?:l['’])?article\s+(\d+)"
+                matches = re.findall(regex_article, art['texte_integral'], re.IGNORECASE)
                 
-                # On cherche un nombre qui n'est pas le numéro de l'article actuel
-                # Pour l'article 145, s'il trouve "52", il créera le bouton.
-                for n in tous_les_nombres:
-                    if str(n) != str(num_article) and len(str(n)) < 4: # On évite les années comme 2024
-                        ui.button(f"📄 Consulter l'article {n} cité", 
-                                  on_click=lambda n_dest=n: charger_article_cité(n_dest)) \
-                            .props('flat color=primary icon=launch').classes('mt-4 font-bold bg-blue-50')
-                        break # On ne prend que le premier trouvé
+                if matches:
+                    # On retire les doublons et le numéro de l'article actuel
+                    articles_cites = list(set([m for m in matches if str(m) != str(num_article)]))
+                    
+                    for num_cite in articles_cites:
+                        ui.button(f"📄 Consulter l'article {num_cite} cité", 
+                                  on_click=lambda n=num_cite: charger_article_cité(n)) \
+                            .props('flat color=primary icon=launch') \
+                            .classes('mt-4 font-bold bg-blue-50 w-full text-left')
 
     container_lies.move(ui.get_context().parent)
     
